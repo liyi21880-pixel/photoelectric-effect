@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101b2d">
+<title>光电效应 · AI虚拟仿真实验室</title>
+<style>
+:root{--bg:#0b1424;--panel:#142239;--panel2:#192b45;--line:#2b4260;--text:#edf4ff;--muted:#9fb1c9;--cyan:#58d9e8;--blue:#6c9cff;--gold:#ffc66d;--green:#64ddb0;--red:#ff7e86}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#1b3150 0,#0b1424 42%,#08111e 100%);color:var(--text);font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5}
+header{padding:22px max(18px,calc((100% - 1180px)/2));border-bottom:1px solid #263b56;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),var(--blue));display:grid;place-items:center;color:#071426;font-weight:900;font-size:21px;box-shadow:0 8px 24px #58d9e833}
+h1{font-size:clamp(20px,3vw,28px);margin:0;letter-spacing:.5px}.sub{color:var(--muted);font-size:12px;margin-top:3px}.header-right{font-size:12px;color:var(--green);border:1px solid #326b64;padding:7px 11px;border-radius:20px}
+main{max-width:1180px;margin:22px auto;padding:0 16px 36px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.intro p{margin:6px 0 0;color:var(--muted);font-size:14px;max-width:680px}.tag{color:var(--cyan);font-size:12px;letter-spacing:1px}
+.layout{display:grid;grid-template-columns: minmax(0,1.25fr) minmax(310px,.75fr);gap:16px}.card{background:linear-gradient(155deg,#172941,#111e32);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 12px 32px #0003}.card h2{font-size:16px;margin:0 0 14px;display:flex;align-items:center;gap:8px}.num{width:23px;height:23px;border-radius:8px;background:#24435c;color:var(--cyan);display:grid;place-items:center;font-size:12px}
+.lab{min-height:310px;background:linear-gradient(180deg,#0a1423,#101d31);border:1px solid #243a55;border-radius:14px;overflow:hidden;position:relative}
+.lab-top{display:flex;justify-content:space-between;padding:11px 13px;color:var(--muted);font-size:12px}.status{color:var(--green)}canvas{display:block;width:100%;height:235px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.metric{background:#0d1a2b;border:1px solid #263d59;border-radius:12px;padding:11px}.metric small{color:var(--muted);font-size:11px}.metric strong{display:block;font-size:18px;margin-top:3px;color:var(--cyan);font-variant-numeric:tabular-nums}
+.controls{display:grid;gap:14px}.control{background:#0d1a2b;border:1px solid #263d59;padding:12px;border-radius:12px}.control label{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:8px}.value{color:var(--cyan);font-weight:700}input[type=range]{width:100%;accent-color:var(--cyan)}select{width:100%;padding:10px;border-radius:9px;background:#172a43;border:1px solid #38516e;color:var(--text);font-size:14px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:10px;padding:10px 14px;background:#263e5d;color:var(--text);font-weight:700;cursor:pointer}.btn.primary{background:linear-gradient(120deg,#52d6e4,#6b9cff);color:#071426}.btn.gold{background:#49391f;color:#ffd58a}.btn:active{transform:scale(.98)}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.chartbox{height:230px;background:#0c192a;border:1px solid #263d59;border-radius:12px;padding:8px}.chartbox canvas{height:210px}
+.readout{color:var(--muted);font-size:13px}.equation{padding:12px;border-radius:10px;background:#0c1b2d;border:1px dashed #3a5a78;color:#dceaff;font-family:Georgia,serif;font-size:17px;text-align:center;margin:10px 0}
+.ai{border:1px solid #3a6674;background:linear-gradient(135deg,#102b3a,#14263e);border-radius:14px;padding:14px}.aihead{display:flex;justify-content:space-between;align-items:center}.aihead b{color:var(--cyan)}.ai p{font-size:13px;color:#d0deef;margin:9px 0}.ai small{color:var(--muted)}.chatrow{display:flex;gap:8px;margin-top:10px}.chatrow input{min-width:0;flex:1;padding:10px;border-radius:9px;background:#0c1b2d;border:1px solid #38516e;color:var(--text);font-size:13px}.chatreply{padding:10px;border-radius:9px;background:#0c1b2d;color:#d0deef;font-size:13px;min-height:38px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}.step{border:1px solid var(--line);border-radius:12px;padding:12px;background:#111f33}.step b{font-size:12px;color:var(--cyan)}.step p{font-size:12px;color:var(--muted);margin:5px 0 0}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 28px;color:#7286a1;font-size:11px;text-align:center}
+@media(max-width:850px){.layout,.lower{grid-template-columns:1fr}.intro{display:block}.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:430px){main{padding:0 10px 25px}.card{padding:13px}.metrics{gap:6px}.metric{padding:8px}.metric strong{font-size:15px}.steps{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">hν</div><div><h1>光电效应 · AI 虚拟仿真实验室</h1><div class="sub">大学物理 C｜交互式实验平台</div></div></div><div class="header-right">● 实验环境已就绪 · 无需安装</div></header>
+<main>
+<div class="intro"><div><div class="tag">VIRTUAL PHYSICS LAB / 01</div><p>改变入射光频率、光强和金属材料，观察光电子发射与光电流变化；采集数据并用智能分析模块估算普朗克常量。</p></div></div>
+<div class="layout">
+<section class="card">
+<h2><span class="num">1</span>实验装置与动态现象</h2>
+<div class="lab"><div class="lab-top"><span>真空光电管模型</span><span class="status" id="emissionStatus">● 等待参数</span></div><canvas id="scene" width="900" height="420" aria-label="光电效应动态装置示意图"></canvas></div>
+<div class="metrics">
+<div class="metric"><small>光子能量</small><strong id="photonEnergy">— eV</strong></div>
+<div class="metric"><small>最大初动能</small><strong id="kinetic">— eV</strong></div>
+<div class="metric"><small>遏止电压</small><strong id="stopV">— V</strong></div>
+</div>
+<div class="equation">hν = W₀ + E<sub>k(max)</sub>　；　eU<sub>s</sub> = E<sub>k(max)</sub></div>
+<div class="readout" id="principleText">实验提示：当光子能量大于金属逸出功时，才会发生光电效应。</div>
+</section>
+<aside class="card">
+<h2><span class="num">2</span>实验参数控制台</h2>
+<div class="controls">
+<div class="control"><label for="wavelength">入射光波长 <span class="value" id="waveVal">400 nm</span></label><input id="wavelength" type="range" min="250" max="700" step="1" value="400"><div class="readout">短波长对应高频率、高光子能量</div></div>
+<div class="control"><label for="intensity">光照强度 <span class="value" id="intVal">65%</span></label><input id="intensity" type="range" min="0" max="100" value="65"><div class="readout">主要影响单位时间内光电子数量与饱和电流</div></div>
+<div class="control"><label for="material">阴极金属材料</label><select id="material"><option value="2.14">铯 Cs（逸出功 2.14 eV）</option><option value="2.28">钠 Na（逸出功 2.28 eV）</option><option value="4.31">锌 Zn（逸出功 4.31 eV）</option><option value="4.70">铜 Cu（逸出功 4.70 eV）</option></select></div>
+<div class="control"><label for="voltage">外加电压 <span class="value" id="voltVal">0.0 V</span></label><input id="voltage" type="range" min="-3" max="3" step=".1" value="0"><div class="readout">负电压阻碍电子到达阳极；正电压促进收集</div></div>
+<div class="btnrow"><button class="btn primary" id="playBtn">▶ 播放电子运动</button><button class="btn" id="resetBtn">↺ 重置参数</button><button class="btn gold" id="collectBtn">＋ 记录本组数据</button></div>
+</div>
+</aside>
+</div>
+<div class="lower">
+<section class="card"><h2><span class="num">3</span>光电流—外加电压曲线</h2><div class="chartbox"><canvas id="ivChart" width="700" height="330"></canvas></div><p class="readout">观察负向遏止电压与正向饱和电流。改变光强，比较饱和电流；改变波长，观察是否出现光电效应。</p></section>
+<section class="card"><h2><span class="num">4</span>实验数据与智能拟合</h2><div class="chartbox"><canvas id="fitChart" width="700" height="330"></canvas></div><div class="btnrow" style="margin-top:10px"><button class="btn primary" id="fitBtn">AI 分析 / 线性拟合</button><button class="btn" id="clearBtn">清空数据</button></div><p class="readout" id="fitResult">已记录 0 组数据。建议至少记录 3 组不同波长且能够发生光电效应的数据。</p></section>
+</div>
+<section class="card" style="margin-top:16px"><h2><span class="num">5</span>AI 实验助教｜自适应诊断与实验建议</h2><div class="ai"><div class="aihead"><b>✦ 智能实验分析引擎</b><small id="aiState">等待实验数据</small></div><p id="aiText">我会根据当前参数、物理模型和已采集数据，判断是否发生光电效应，识别无效实验条件，并给出下一步操作建议。点击“AI 分析 / 线性拟合”可进一步估算普朗克常量。</p><div class="btnrow"><button class="btn primary" id="diagnoseBtn">诊断当前实验</button><button class="btn" id="hypothesisBtn">检验我的假设</button></div><p id="hypothesisText" class="readout">假设挑战：光强增大，遏止电压会增大吗？先调整光强，再点击检验。</p><div class="chatrow"><input id="chatInput" placeholder="向实验助教提问，例如：为什么提高光强不改变遏止电压？"><button class="btn" id="chatSend">发送</button></div><div id="chatReply" class="chatreply">你可以围绕实验原理、参数变化、数据拟合和误差原因提问。</div></div></section>
+<div class="steps">
+<div class="step"><b>STEP 01 · 提出问题</b><p>光的频率和强度分别怎样影响光电效应？</p></div>
+<div class="step"><b>STEP 02 · 控制变量</b><p>每次只改变一个参数，记录其他条件。</p></div>
+<div class="step"><b>STEP 03 · 采集数据</b><p>记录波长与遏止电压，形成实验数据集。</p></div>
+<div class="step"><b>STEP 04 · 得出结论</b><p>拟合 Uₛ—ν 关系，比较估算值与公认值。</p></div>
+</div>
+</main>
+<footer>物理模型为教学简化模型，数值用于原理演示；实验结论应结合教材与真实实验条件理解。<br>AI 模块采用本地规则推理、异常识别与最小二乘拟合，不上传个人数据，不将规则引擎伪称为大语言模型。</footer>
+<script>
+(()=>{
+const $=id=>document.getElementById(id), c=299792458, h=6.62607015e-34, e=1.602176634e-19;
+const state={playing:true,data:[],lastIntensity:65,lastStop:0};
+const wave=$('wavelength'), intensity=$('intensity'), material=$('material'), voltage=$('voltage');
+const scene=$('scene').getContext('2d'), iv=$('ivChart').getContext('2d'), fit=$('fitChart').getContext('2d');
+let particles=[], tick=0;
+function calc(){let nm=+wave.value, phi=+material.value, photon=1240/nm, ek=photon-phi, emit=ek>0&&+intensity.value>0, stop=Math.max(0,ek);return {nm,phi,photon,ek:Math.max(0,ek),emit,stop};}
+function currentAt(v,s){if(!s.emit)return 0;let sat=+intensity.value/100;let x=(v+s.stop);let curve=1/(1+Math.exp(-x/.16));let base=1/(1+Math.exp(-(-3+s.stop)/.16));return Math.max(0,Math.min(1,(curve-base)/(1-base)))*sat;}
+function update(){let s=calc();$('waveVal').textContent=s.nm+' nm';$('intVal').textContent=intensity.value+'%';$('voltVal').textContent=(+voltage.value).toFixed(1)+' V';$('photonEnergy').textContent=s.photon.toFixed(2)+' eV';$('kinetic').textContent=s.emit?s.ek.toFixed(2)+' eV':'0.00 eV';$('stopV').textContent=s.emit?s.stop.toFixed(2)+' V':'0.00 V';$('emissionStatus').textContent=s.emit?'● 正在发射光电子':'● 未发生光电效应';$('emissionStatus').style.color=s.emit?'#64ddb0':'#ff9a83';$('principleText').textContent=s.emit?`光子能量 ${s.photon.toFixed(2)} eV 大于逸出功 ${s.phi.toFixed(2)} eV，阴极能够发射光电子。`:`光子能量 ${s.photon.toFixed(2)} eV 小于逸出功 ${s.phi.toFixed(2)} eV，当前条件下不会产生光电子。`;drawScene(s);drawIV(s);drawFit();}
+function drawScene(s){let w=900,hh=420;scene.clearRect(0,0,w,hh);scene.fillStyle='#0a1423';scene.fillRect(0,0,w,hh);
+scene.strokeStyle='#8da7c5';scene.lineWidth=5;scene.beginPath();scene.roundRect(170,90,570,240,110);scene.stroke();
+scene.fillStyle='#29445f';scene.fillRect(205,130,18,160);scene.fillStyle='#ffc66d';scene.fillRect(685,130,18,160);
+scene.fillStyle='#ffd48a';scene.font='18px sans-serif';scene.fillText('阴极 K',165,70);scene.fillText('阳极 A',660,70);
+scene.fillStyle='#9fb1c9';scene.font='15px sans-serif';scene.fillText('真空光电管',390,365);
+let hue=Math.max(0,Math.min(1,(700-s.nm)/450));let col=`hsl(${190+hue*100},90%,65%)`;
+for(let i=0;i<5;i++){let yy=145+i*28;scene.strokeStyle=col;scene.lineWidth=3;scene.beginPath();scene.moveTo(35+i*3,yy);scene.lineTo(190,yy);scene.stroke();scene.beginPath();scene.arc(190,yy,5,0,Math.PI*2);scene.fillStyle=col;scene.fill();}
+scene.fillStyle=col;scene.font='16px sans-serif';scene.fillText('入射光',50,115);
+if(s.emit&&state.playing){if(Math.random()<.42)particles.push({x:230,y:145+Math.random()*135,v:2+Math.random()*2});}
+particles=particles.filter(p=>p.x<690);particles.forEach(p=>{p.x+=p.v*(+voltage.value>=0?1:.65);scene.fillStyle='#58d9e8';scene.beginPath();scene.arc(p.x,p.y,5,0,Math.PI*2);scene.fill();scene.strokeStyle='#58d9e8';scene.beginPath();scene.moveTo(p.x-9,p.y);scene.lineTo(p.x-4,p.y);scene.stroke();});
+scene.fillStyle='#9fb1c9';scene.font='14px sans-serif';scene.fillText(`外加电压：${(+voltage.value).toFixed(1)} V`,360,40);
+}
+function axes(ctx,w,h,xlabel,ylabel){ctx.clearRect(0,0,w,h);ctx.strokeStyle='#49617e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(54,15);ctx.lineTo(54,h-38);ctx.lineTo(w-15,h-38);ctx.stroke();ctx.fillStyle='#9fb1c9';ctx.font='13px sans-serif';ctx.fillText(ylabel,7,18);ctx.fillText(xlabel,w/2-25,h-8);}
+function drawIV(s){let w=700,hh=330;axes(iv,w,hh,'电压 / V','相对电流');iv.fillStyle='#9fb1c9';iv.font='12px sans-serif';for(let i=0;i<=6;i++){let x=54+i*(w-75)/6,v=-3+i;iv.fillText(v.toFixed(0),x-5,hh-18);}for(let i=0;i<=4;i++){let y=hh-38-i*(hh-60)/4;iv.fillText((i/4).toFixed(2),18,y+4);}
+iv.strokeStyle='#58d9e8';iv.lineWidth=3;iv.beginPath();for(let i=0;i<=120;i++){let v=-3+i*.05,x=54+(v+3)/6*(w-75),y=hh-38-currentAt(v,s)*(hh-60);if(i===0)iv.moveTo(x,y);else iv.lineTo(x,y);}iv.stroke();let vx=54+((+voltage.value+3)/6)*(w-75),vy=hh-38-currentAt(+voltage.value,s)*(hh-60);iv.fillStyle='#ffc66d';iv.beginPath();iv.arc(vx,vy,6,0,Math.PI*2);iv.fill();iv.fillStyle='#ffc66d';iv.fillText('当前工作点',w-112,28);}
+function drawFit(){let w=700,hh=330;axes(fit,w,hh,'频率 / 10¹⁴ Hz','遏止电压 / V');fit.fillStyle='#9fb1c9';fit.font='12px sans-serif';fit.fillText('数据点：'+state.data.length,570,20);if(!state.data.length)return;let xs=state.data.map(d=>d.f/1e14),ys=state.data.map(d=>d.u),xmin=Math.min(4,...xs)-.2,xmax=Math.max(8,...xs)+.2,ymax=Math.max(3,...ys,1);let X=x=>54+(x-xmin)/(xmax-xmin)*(w-75),Y=y=>hh-38-y/ymax*(hh-60);fit.fillStyle='#ffc66d';state.data.forEach(d=>{fit.beginPath();fit.arc(X(d.f/1e14),Y(d.u),5,0,Math.PI*2);fit.fill();});if(state.data.length>=2){let r=regression(state.data);if(r){fit.strokeStyle='#58d9e8';fit.lineWidth=2;fit.beginPath();fit.moveTo(X(xmin),Y(r.a*xmin*1e14+r.b));fit.lineTo(X(xmax),Y(r.a*xmax*1e14+r.b));fit.stroke();}}}
+function regression(data){let n=data.length,mx=data.reduce((a,d)=>a+d.f,0)/n,my=data.reduce((a,d)=>a+d.u,0)/n,num=0,den=0;data.forEach(d=>{num+=(d.f-mx)*(d.u-my);den+=(d.f-mx)**2});if(!den)return null;let a=num/den,b=my-a*mx;return {a,b};}
+function diagnose(){let s=calc(),msg='';if(!s.emit)msg=`诊断：当前没有光电子发射。建议缩短波长（提高频率），或选择逸出功更低的金属。注意：单纯提高光强不能让低于阈频的光产生光电子。`;else if(+voltage.value < -s.stop)msg=`诊断：外加反向电压已超过遏止电压，光电流应接近零。可逐步提高电压，观察电流恢复。`;else if(+intensity.value<15)msg=`诊断：光强较低，光电子数量少，饱和电流较小。提高光强后比较电流曲线，遏止电压理论上基本不变。`;else msg=`诊断：实验条件有效。当前最大初动能约 ${s.ek.toFixed(2)} eV，遏止电压约 ${s.stop.toFixed(2)} V。建议保持材料和光强不变，改变波长并记录多组数据。`;$('aiText').textContent=msg;$('aiState').textContent='已完成参数诊断';}
+function collect(){let s=calc();if(!s.emit){$('fitResult').textContent='本组未发生光电效应，无法记录有效遏止电压。请先调整波长或材料。';diagnose();return;}let f=c/(s.nm*1e-9);state.data.push({f,u:s.stop,nm:s.nm});$('fitResult').textContent=`已记录 ${state.data.length} 组：λ=${s.nm} nm，ν=${(f/1e14).toFixed(3)}×10¹⁴ Hz，Uₛ=${s.stop.toFixed(3)} V。`;drawFit();}
+function fitData(){if(state.data.length<3){$('fitResult').textContent='数据不足：至少记录 3 组不同波长的有效数据，再进行拟合。';return;}let r=regression(state.data);if(!r)return;let hest=r.a*e;let err=Math.abs(hest-h)/h*100;$('fitResult').innerHTML=`拟合关系：Uₛ = ${(r.a/1e-15).toFixed(3)}×10⁻¹⁵ ν ${r.b>=0?'+':'−'} ${Math.abs(r.b).toFixed(3)}<br>估算普朗克常量：<b style="color:#58d9e8">${hest.toExponential(3)} J·s</b><br>与公认值相对误差：${err.toFixed(2)}%。`;$('aiText').textContent=`智能分析完成：共分析 ${state.data.length} 组有效数据。拟合斜率对应 h/e，估算普朗克常量为 ${hest.toExponential(3)} J·s，相对误差 ${err.toFixed(2)}%。若误差较大，请检查波长跨度是否足够、是否混入无效数据，并增加不同频率的数据点。`;$('aiState').textContent='数据拟合完成';drawFit();}
+function reset(){wave.value=400;intensity.value=65;material.value='2.14';voltage.value=0;particles=[];state.playing=true;$('playBtn').textContent='Ⅱ 暂停电子运动';update();}
+[wave,intensity,material,voltage].forEach(el=>el.addEventListener('input',update));
+$('playBtn').onclick=()=>{state.playing=!state.playing;$('playBtn').textContent=state.playing?'Ⅱ 暂停电子运动':'▶ 播放电子运动';};
+$('resetBtn').onclick=reset;$('collectBtn').onclick=collect;$('fitBtn').onclick=fitData;$('clearBtn').onclick=()=>{state.data=[];$('fitResult').textContent='数据已清空。';drawFit();};$('diagnoseBtn').onclick=diagnose;
+function chat(){let q=$('chatInput').value.trim();if(!q)return;let s=calc(),a='我可以帮助你分析光电效应条件、光强与频率的区别、遏止电压和数据拟合。请尽量提出与本实验相关的问题。';
+if(/光强|强度/.test(q))a='光强主要决定单位时间内入射光子数量。在频率高于截止频率时，光强增大通常会使光电子数量和饱和电流增大；单个光子的能量不变，因此最大初动能和遏止电压理论上不变。';
+else if(/频率|波长|截止|阈频/.test(q))a=`频率越高，单个光子能量 hν 越大；等价地，波长越短，光子能量越高。当前波长 ${s.nm} nm，光子能量 ${s.photon.toFixed(3)} eV，材料逸出功 ${s.phi.toFixed(2)} eV，因此${s.emit?'可以发生':'不能发生'}光电效应。`;
+else if(/遏止|电压/.test(q))a=`遏止电压是刚好阻止最快光电子到达阳极所需的反向电压绝对值。当前理论遏止电压为 ${s.stop.toFixed(3)} V。由 eUₛ=Eₖ(max)，它与频率有关，与光强无直接关系。`;
+else if(/普朗克|拟合|误差|数据/.test(q))a=`拟合需要至少 3 组不同频率且发生光电效应的数据。根据 Uₛ=(h/e)ν−W₀/e，直线斜率乘以元电荷 e 就是普朗克常量。当前已记录 ${state.data.length} 组数据。`;
+else if(/材料|逸出功/.test(q))a=`材料逸出功越大，发生光电效应所需的最低频率越高。当前材料逸出功为 ${s.phi.toFixed(2)} eV；可切换 Cs、Na、Zn、Cu 对比截止条件。`;
+$('chatReply').textContent=a;$('chatInput').value='';}
+$('chatSend').onclick=chat;$('chatInput').addEventListener('keydown',ev=>{if(ev.key==='Enter')chat();});
+$('hypothesisBtn').onclick=()=>{let s=calc(),delta=+intensity.value-state.lastIntensity;let ans=delta===0?'请先改变光强，再点击检验。':`光强从 ${state.lastIntensity}% 变为 ${intensity.value}%。理论判断：${s.emit?'饱和电流随光强变化，但遏止电压由频率和逸出功决定，基本不变。':'当前未发生光电效应，提高光强也不能突破阈频。'}`;$('hypothesisText').textContent=ans;state.lastIntensity=+intensity.value;};
+function loop(){tick++;if(state.playing)drawScene(calc());requestAnimationFrame(loop);}
+update();loop();
+})();
+</script>
+</body></html>
